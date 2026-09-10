@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Xotiralar</title>
+<style>
+  html,body{margin:0;height:100%;background:#f4efe6;color:#2b2420;font-family:Georgia,serif}
+  main{min-height:100%;display:grid;place-items:center;text-align:center;padding:24px;box-sizing:border-box}
+  p{font-size:21px;line-height:1.5;max-width:26ch;margin:0 auto}
+  small{display:block;margin-top:16px;color:#7a6d62;font:14px/1.4 system-ui,sans-serif}
+</style>
+</head>
+<body><main><div><p id="t">Ochilmoqda…</p><small id="s"></small></div></main>
+<script>
+(async () => {
+  const t = document.getElementById('t'), s = document.getElementById('s');
+  const key = (location.pathname.split('/').filter(Boolean)[0] || '').toUpperCase();
+  if (!key) { t.textContent = 'Bu sahifa qulflangan.'; return; }
+  try {
+    const t0 = performance.now();
+    const k = await (await fetch('/k.json', { cache: 'no-store' })).json();
+    const b = x => Uint8Array.from(atob(x), c => c.charCodeAt(0));
+    const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(key), 'PBKDF2', false, ['deriveKey']);
+    const aes = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: b(k.salt), iterations: k.iter, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+    const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b(k.iv) }, aes, b(k.ct));
+    t.textContent = new TextDecoder().decode(pt);
+    s.textContent = 'Kalit to‘g‘ri · ' + Math.round(performance.now() - t0) + ' ms';
+  } catch (e) { t.textContent = 'Bu sahifa qulflangan.'; }
+})();
+</script>
+</body></html>
