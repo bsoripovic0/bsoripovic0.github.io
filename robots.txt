@@ -1,2 +1,4 @@
 User-agent: *
 Disallow: /
+Allow: /gallery-sayt/
+Sitemap: https://bsoripovic0.github.io/gallery-sayt/sitemap.xml
